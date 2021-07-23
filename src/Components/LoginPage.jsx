@@ -13,7 +13,7 @@ export default function LoginPage() {
             username: e.target.username.value,
             password: e.target.password.value
         }
-        let response = await axios.post("http://localhost:3300/auth/signin", values, {
+        let response = await axios.post("auth/signin", values, {
             validateStatus: function (status) {
                 return status < 500; // Reject only if the status code is greater than or equal to 500
             },
@@ -24,8 +24,7 @@ export default function LoginPage() {
         })
         toast({
             title: "Account",
-            description: `${response.data.message
-                }`,
+            description: `${response.data.message}`,
             status: response.status === 200 ? "success" : "error",
             duration: 1500,
             isClosable: true,
