@@ -45,13 +45,13 @@ export default function LoginPage() {
                         <Heading >
                             "<span style={{ color: "rgb(27,118,211)", fontSize: "40px" }}>Bord</span>" are we?
                         </Heading>
-                        <Box boxShadow="sm" border="1px" p="20px" borderColor="gray.200" pb="50px">
+                        <Box boxShadow="sm" border="1px" p="20px" borderColor="gray.200" pb="50px" w="300px">
                             <VStack spacing={4}>
                                 <Heading size="lg" alignSelf="flex-start">
                                     Login
                                 </Heading>
                                 <InputGroup>
-                                    <Input name="username" required type="text" placeholder="Username" w="250px">
+                                    <Input name="username" required type="text" placeholder="Username">
                                     </Input>
                                     <InputLeftElement
                                         pointerEvents="none"

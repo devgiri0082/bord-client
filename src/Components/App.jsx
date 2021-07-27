@@ -8,7 +8,6 @@ export default function App() {
     let history = useHistory();
     interceptor(history);
     return (
-
         <Switch>
             <Route exact path="/">
                 <LoginPage />
