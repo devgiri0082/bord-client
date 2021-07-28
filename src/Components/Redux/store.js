@@ -1,10 +1,10 @@
-import { createStore, combineReducers, applyMiddleware } from "redux";
-import userReducer from "../Redux/Reducer/userReducer";
-import { createLogger } from "redux-logger";
+import { createStore, applyMiddleware } from "redux";
+import reducer from "../Redux/Reducer/reducer";
+// import { createLogger } from "redux-logger";
 import thunk from "redux-thunk";
-let reducers = combineReducers({
-  user: userReducer,
-});
-let middleware = [createLogger(), thunk];
-let store = createStore(reducers, applyMiddleware(...middleware));
+// let reducers = combineReducers({
+//   user: reducer,
+// });
+let middleware = [thunk];
+let store = createStore(reducer, applyMiddleware(...middleware));
 export default store;

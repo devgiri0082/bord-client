@@ -11,7 +11,6 @@ export default function Signup() {
     async function signingUp(e) {
         e.preventDefault();
         let data = new FormData();
-        console.log(e.target.profilePic.files.length);
         e.target.profilePic.files.length > 0 && data.append("profilePic", e.target.profilePic?.files[0], e.target.profilePic?.files[0].name);
         data.append("name", e.target.name.value);
         data.append("username", e.target.username.value);
@@ -38,7 +37,7 @@ export default function Signup() {
                 setTimeout(() => history.push("/"), 1500)
             }
         } catch (err) {
-            console.log(err, "there is an error");
+            console.log(err);
         }
     }
     return (

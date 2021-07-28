@@ -3,12 +3,17 @@ import { Center, useToast, Heading, VStack, Box, Input, InputGroup, InputLeftEle
 import { AiOutlineUser, AiOutlineLock, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from 'react-redux';
+import { loading } from './Redux/Action/userAction/Action';
 export default function LoginPage() {
     let toast = useToast();
     let history = useHistory();
+    let dispatch = useDispatch();
     let [passwordType, setPasswordType] = useState("password");
+    if (localStorage.getItem("accessToken")) history.push("/feed");
     let signingIn = async (e) => {
         e.preventDefault();
+        dispatch(loading(true));
         let values = {
             username: e.target.username.value,
             password: e.target.password.value
@@ -26,16 +31,15 @@ export default function LoginPage() {
             title: "Account",
             description: `${response.data.message}`,
             status: response.status === 200 ? "success" : "error",
-            duration: 1500,
+            duration: 300,
             isClosable: true,
         })
+
         if (response.status === 200) {
-            console.log(response.data);
             localStorage.setItem("accessToken", response.data.accessToken);
             localStorage.setItem("refreshToken", response.data.refreshToken);
-            setTimeout(() => history.push("/feed"), 1500)
+            setTimeout(() => history.push("/feed"), 300)
         }
-        console.log(response);
     }
     return (
         <Fragment>

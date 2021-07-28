@@ -3,14 +3,15 @@ import axios from "axios";
 export default function interceptor(history) {
     let previousRequest;
     let previousMethod;
+    let previousBody;
     axios.defaults.baseURL = "http://localhost:3300/"
     axios.interceptors.request.use(
         function (req) {
-            console.log("requesting");
             req.headers["Authorization"] = `Bearer ${localStorage.getItem("accessToken")}`;
-            console.log(req.url, req.method);
             previousRequest = req.url;
+
             previousMethod = req.method;
+            previousBody = req.data;
             return req;
         },
         function (err) {
@@ -20,10 +21,8 @@ export default function interceptor(history) {
     );
     axios.interceptors.response.use(
         async function (response) {
-            console.log(response);
             if (response.data.message === "invalid token") {
                 try {
-                    console.log("going in", localStorage.getItem("refreshToken"));
                     let response = await fetch("http://localhost:3300/refresh", {
                         method: "POST",
                         headers: {
@@ -32,7 +31,6 @@ export default function interceptor(history) {
                         }
                     });
                     let data = await response.json();
-                    console.log(data, response, "refresh");
                     if (response.status !== 200) {
                         localStorage.removeItem("refreshToken");
                         localStorage.removeItem("accessToken");
@@ -42,15 +40,15 @@ export default function interceptor(history) {
                     localStorage.setItem("refreshToken", data.refreshToken);
                     switch (previousMethod) {
                         case "get":
-                            return axios.get(previousRequest);
+                            return axios.get(previousRequest, previousBody);
                         case "post":
-                            return axios.post(previousRequest);
+                            return axios.post(previousRequest, previousBody);
                         case "delete":
-                            return axios.delete(previousRequest);
+                            return axios.delete(previousRequest, previousBody);
                         case "put":
-                            return axios.put(previousRequest);
+                            return axios.put(previousRequest, previousBody);
                         case "patch":
-                            return axios.patch(previousRequest);
+                            return axios.patch(previousRequest, previousBody);
                         default:
                     }
 
@@ -58,12 +56,11 @@ export default function interceptor(history) {
                     console.log(err, "refreshError");
                 }
             }
-            console.log("resonse in interceptor", response.data.message)
             return response;
         },
         function (err) {
             console.log(err, "error")
-            return Promise.reject(err);
+            return err;
         }
     )
 
