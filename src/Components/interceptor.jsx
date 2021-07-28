@@ -4,7 +4,7 @@ export default function interceptor(history) {
     let previousRequest;
     let previousMethod;
     let previousBody;
-    axios.defaults.baseURL = "http://localhost:3300/"
+    axios.defaults.baseURL = "https://bord-server.herokuapp.com/"
     axios.interceptors.request.use(
         function (req) {
             req.headers["Authorization"] = `Bearer ${localStorage.getItem("accessToken")}`;
@@ -23,7 +23,7 @@ export default function interceptor(history) {
         async function (response) {
             if (response.data.message === "invalid token") {
                 try {
-                    let response = await fetch("http://localhost:3300/refresh", {
+                    let response = await fetch("https://bord-server.herokuapp.com/refresh", {
                         method: "POST",
                         headers: {
                             'Authorization': `bearer ${localStorage.getItem("refreshToken")}`,
