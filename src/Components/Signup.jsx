@@ -4,11 +4,15 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useHistory } from 'react-router-dom';
 import FormData from "form-data"
 import axios from "axios"
+import { useDispatch } from 'react-redux';
+import { loading } from "./Redux/Action/userAction/Action"
 export default function Signup() {
     let toast = useToast();
     let history = useHistory();
     let [passwordType, setPasswordType] = useState("password");
+    let dispatch = useDispatch();
     async function signingUp(e) {
+        dispatch(loading(true));
         e.preventDefault();
         let data = new FormData();
         e.target.profilePic.files.length > 0 && data.append("profilePic", e.target.profilePic?.files[0], e.target.profilePic?.files[0].name);
@@ -33,6 +37,7 @@ export default function Signup() {
                 duration: 1500,
                 isClosable: true,
             })
+            dispatch(loading(false));
             if (response.status === 200) {
                 setTimeout(() => history.push("/"), 1500)
             }
