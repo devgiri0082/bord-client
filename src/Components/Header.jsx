@@ -14,7 +14,10 @@ export default function Header({ username }) {
                     Bord
                 </Heading>
                 <Flex spacing={4} justify="space-evenly" w="250px">
-                    <Button bg="rgb(27,118,211)" borderRadius="0" onClick={() => history.push(`/profile/${username}`)}>Profile</Button>
+                    <Button bg="rgb(27,118,211)" borderRadius="0" onClick={() => {
+                        console.log(username);
+                        history.push(username ? `/profile/${username}` : `/`)
+                    }}>Profile</Button>
                     <Button color="black" border="1px" borderColor="gray.300" borderRadius="0" onClick={logout}>Log Out</Button>
                 </Flex>
             </Flex>
