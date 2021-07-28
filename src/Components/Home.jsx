@@ -6,8 +6,11 @@ import PersonCard from "./PersonCard";
 import PostCard from './PostCard';
 import { useDispatch } from 'react-redux';
 import { loading } from './Redux/Action/userAction/Action';
+import { useHistory } from 'react-router-dom';
 
 export default function Home() {
+    let history = useHistory();
+    if (!localStorage.getItem("accessToken") && !localStorage.getItem("refreshToken")) history.push("/");
     const [userDetail, setUserDetail] = useState();
     let dataRef = useRef();
     let dispatch = useDispatch();
@@ -38,6 +41,7 @@ export default function Home() {
                     return status < 500; // Reject only if the status code is greater than or equal to 500
                 }
             })
+            console.log(response.data.message);
             if (response.status === 200) setUserDetail(response.data.message);
             response = await axios.get("/post", {
                 validateStatus: function (status) {

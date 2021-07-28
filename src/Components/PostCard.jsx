@@ -1,4 +1,4 @@
-import { Heading, VStack, Text, Divider } from '@chakra-ui/react'
+import { Heading, VStack, Text, Divider, toast } from '@chakra-ui/react'
 import React from 'react'
 import { AiOutlineLike } from "react-icons/ai";
 import axios from "axios";
@@ -20,15 +20,22 @@ export default function PostCard({ post, user, getProfile }) {
     async function dislikePost() {
         dispatch(loading(true));
         try {
-            let response = await axios.post(`/post/dislike/${post.slug}`, {}, {
+            let response = await axios.post(`/post/dislike/${post.slug}`, {
                 validateStatus: function (status) {
                     return status < 500; // Reject only if the status code is greater than or equal to 500
                 }
             })
             if (response.status === 200) await getProfile();
+            else toast({
+                title: "Error",
+                description: `user not logged in`,
+                status: "error",
+                duration: 500,
+                isClosable: true,
+            })
 
         } catch (err) {
-            console.log(err);
+            console.log(err, "error");
         }
         dispatch(loading(false))
     }
@@ -36,13 +43,19 @@ export default function PostCard({ post, user, getProfile }) {
     async function likePost() {
         dispatch(loading(true));
         try {
-            let response = await axios.post(`/post/like/${post.slug}`, {}, {
+            let response = await axios.post(`/post/like/${post.slug}`, {
                 validateStatus: function (status) {
                     return status < 500; // Reject only if the status code is greater than or equal to 500
                 }
             })
             if (response.status === 200) await getProfile();
-
+            else toast({
+                title: "Error",
+                description: `user not logged in`,
+                status: "error",
+                duration: 500,
+                isClosable: true,
+            })
         } catch (err) {
             console.log(err);
         }

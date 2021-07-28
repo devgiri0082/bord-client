@@ -18,28 +18,34 @@ export default function LoginPage() {
             username: e.target.username.value,
             password: e.target.password.value
         }
-        let response = await axios.post("auth/signin", values, {
-            validateStatus: function (status) {
-                return status < 500; // Reject only if the status code is greater than or equal to 500
-            },
-            headers: {
-                "accept": "application/json",
-                'Content-Type': `application/json`
-            }
-        })
-        toast({
-            title: "Account",
-            description: `${response.data.message}`,
-            status: response.status === 200 ? "success" : "error",
-            duration: 300,
-            isClosable: true,
-        })
+        try {
+            let response = await axios.post("auth/signin", values, {
+                validateStatus: function (status) {
+                    return status < 500; // Reject only if the status code is greater than or equal to 500
+                },
+                headers: {
+                    "accept": "application/json",
+                    'Content-Type': `application/json`
+                }
+            })
+            console.log(response);
+            toast({
+                title: "Account",
+                description: `${response.data.message}`,
+                status: response.status === 200 ? "success" : "error",
+                duration: 300,
+                isClosable: true,
+            })
 
-        if (response.status === 200) {
-            localStorage.setItem("accessToken", response.data.accessToken);
-            localStorage.setItem("refreshToken", response.data.refreshToken);
-            setTimeout(() => history.push("/feed"), 300)
+            if (response.status === 200) {
+                localStorage.setItem("accessToken", response.data.accessToken);
+                localStorage.setItem("refreshToken", response.data.refreshToken);
+                setTimeout(() => history.push("/feed"), 300)
+            }
+        } catch (err) {
+            console.log(err);
         }
+
     }
     return (
         <Fragment>

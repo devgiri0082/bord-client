@@ -1,4 +1,4 @@
-import { Button, Text, Flex, Heading, VStack, Avatar } from '@chakra-ui/react'
+import { Button, Text, Flex, Heading, VStack, Avatar, toast } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Header from './Header';
@@ -15,11 +15,14 @@ export default function Profile() {
     async function getProfile() {
         dispatch(loading(true));
         try {
+            console.log("gettinguser");
             let response = await axios.get(`profile/${username}`, {
                 validateStatus: function (status) {
                     return status < 500; // Reject only if the status code is greater than or equal to 500
                 }
             })
+            if (response.data.message.user.picture) response.data.message.user.picture = response.data.message.user.picture.split("/")[1];
+            console.log(response.data.message);
             setProfile(response.data.message);
             response = await axios.get("authorize", {
                 validateStatus: function (status) {
@@ -41,7 +44,7 @@ export default function Profile() {
             <div>
                 <Header username={userDetail.username} />
                 <VStack border="1px" borderColor="gray.400" p={5} bg="white" alignItems="flex-start" w="70%" m="50px">
-                    <Avatar size="lg" name={profile?.user.username} src={profile?.user.picture ? `http://localhost:3300/${profile?.user.picture}` : "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.worldfuturecouncil.org%2Fwp-content%2Fuploads%2F2020%2F02%2Fdummy-profile-pic-300x300-1.png&f=1&nofb=1"} />{" "}
+                    <Avatar size="lg" name={profile?.user.username} src={`http://localhost:3300/${profile?.user.picture}`} />{" "}
                     <Heading>{profile?.user.name}</Heading>
                     <Flex>
                         <Heading mt="35px" size="md" mr={3}>@{profile?.user.username}</Heading>
@@ -53,7 +56,7 @@ export default function Profile() {
                     </Flex>
                 </VStack>
                 <VStack mt={5} alignItems="flex-start" m="50px">
-                    <Heading>{userDetail.username}'s posts</Heading>
+                    <Heading>{profile?.user.username}'s posts</Heading>
                     {profile?.user.posts.length > 0 ? profile?.user.posts.map((elem) => {
                         let newProfile = { ...elem, user: { username: profile?.user.username } }
                         return <PostCard post={newProfile} user={userDetail} getProfile={getProfile} />
@@ -63,7 +66,7 @@ export default function Profile() {
         )
     } else {
         return (
-            <div></div>
+            <div style={{ height: "100vh", width: "100vw" }}></div>
         )
     }
     async function follow() {
@@ -75,6 +78,13 @@ export default function Profile() {
                 }
             });
             if (response.status === 200) getProfile();
+            else toast({
+                title: "Account",
+                description: `user not logged in`,
+                status: "error",
+                duration: 500,
+                isClosable: true,
+            })
         } catch (err) {
             console.log(err);
         }
@@ -89,6 +99,13 @@ export default function Profile() {
                 }
             });
             if (response.status === 200) getProfile();
+            else toast({
+                title: "Account",
+                description: `user not logged in`,
+                status: "error",
+                duration: 500,
+                isClosable: true,
+            })
         } catch (err) {
             console.log(err);
         }
