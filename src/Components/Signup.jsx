@@ -21,7 +21,7 @@ export default function Signup() {
         data.append("email", e.target.email.value);
         data.append("password", e.target.password.value);
         try {
-            let response = await axios.post("http://localhost:3300/auth/signup", data, {
+            let response = await axios.post("auth/signup", data, {
                 validateStatus: function (status) {
                     return status < 500; // Reject only if the status code is greater than or equal to 500
                 },
